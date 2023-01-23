@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="courses" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="sy" class="java.lang.String"/>
+	<parameter name="schoolYear" class="java.lang.String"/>
+	<parameter name="semester" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT c_name,c_description, c_department, e_yearlevel,count(c_name) as registeredPerCourse
+FROM enrollment e,lecture l,lecturer lec,course c,student stud, subjects subs,room ro
+where e.e_lecture = l.lectureid
+and subs.sub_code = l.subject
+and lec.lec_id = l.lecturer
+and c.courseid = e.e_course
+and ro.rid = e.e_room
+and stud.studentid = e.e_student and e.e_schoolyear = $P{schoolYear}
+and e.e_semester = $P{semester}
+group by c_name,e_yearlevel order by c_name asc]]>
+	</queryString>
+	<field name="c_name" class="java.lang.String"/>
+	<field name="c_description" class="java.lang.String"/>
+	<field name="c_department" class="java.lang.String"/>
+	<field name="e_yearlevel" class="java.lang.String"/>
+	<field name="registeredPerCourse" class="java.lang.Long"/>
+	<variable name="countRow" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{c_name}]]></variableExpression>
+	</variable>
+	<variable name="totalStuds" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{registeredPerCourse}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="752" height="34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODE CORNER UNIVERSITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="38" width="752" height="20" forecolor="#CC3300"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[List of Registered Students/Course]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="52" width="752" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sy}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="665" y="28" width="87" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reg. Students]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="49" width="752" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="584" y="28" width="79" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Year Level]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="28" width="108" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="29" width="348" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="29" width="89" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="32" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="32" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{countRow}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="0" width="89" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{c_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="348" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{c_description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="473" y="0" width="108" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{c_department}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="665" y="0" width="87" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{registeredPerCourse}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="584" y="0" width="79" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{e_yearlevel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="2" width="752" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="581" y="5" width="82" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total Student(s) : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="665" y="5" width="87" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$V{totalStuds}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
